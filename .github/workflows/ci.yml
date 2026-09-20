@@ -1,0 +1,39 @@
+# Runs Prettier and ESLint on every pull request.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+# Supersede an in-progress run when the same branch is pushed again.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    name: Format and lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      # Install exactly the versions package-lock.json pins.
+      - name: Install dependencies
+        run: npm ci
+
+      # Read-only check. It reports unformatted files and never rewrites them.
+      - name: Check formatting
+        run: npm run format:check
+
+      # Skips any workspace package that has no lint script.
+      - name: Lint
+        run: npm run lint
