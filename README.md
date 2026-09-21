@@ -5,7 +5,8 @@
 
 ### A canvas for branching ideas
 
-A canvas where a single prompt branches into paths you can follow, merge, and prune, so nothing gets lost in a chat log.
+A canvas where a single prompt branches into paths you can
+follow, merge, and prune, so nothing gets lost in a chat log.
 
 ![Project Status](https://img.shields.io/badge/status-in%20development-yellow)
 ![Next.js](https://img.shields.io/badge/Next.js-black?logo=next.js)
@@ -20,11 +21,19 @@ A canvas where a single prompt branches into paths you can follow, merge, and pr
 
 ## About Pathfinders
 
-Traditional AI chats organize ideas in one long, linear conversation. As conversations grow, useful ideas become buried, abandoned branches are difficult to revisit, and users can lose track of why they made certain decisions.
+Traditional AI chats organize ideas in one long, linear
+conversation. As conversations grow, useful ideas become buried,
+abandoned branches are difficult to revisit, and users can lose
+track of why they made certain decisions.
 
-Pathfinders replaces the linear chat log with an interactive visual canvas. A single prompt can branch into multiple directions, allowing users to explore alternatives without losing earlier ideas.
+Pathfinders replaces the linear chat log with an interactive
+visual canvas. A single prompt can branch into multiple
+directions, allowing users to explore alternatives without
+losing earlier ideas.
 
-The application is useful for anyone, but specifically people who struggle with brainstorming such as developing the next Notion to someone choosing a birthday gift.
+The application is useful for anyone, but specifically people
+who struggle with brainstorming such as developing the next
+Notion to someone choosing a birthday gift.
 
 ## Core Features
 
@@ -39,7 +48,8 @@ The application is useful for anyone, but specifically people who struggle with 
 - Track ideas the user accepts, rejects, or ignores
 - Merge related branches into a shared direction
 
-> Branch merging is a stretch goal and may be postponed to prioritize the core branching experience.
+> Branch merging is a stretch goal and may be postponed to
+> prioritize the core branching experience.
 
 ## Example
 
@@ -58,18 +68,20 @@ Pathfinders might generate several possible directions:
 └── Platform for learning how to code
 ```
 
-Instead of choosing one direction and losing the others, the user can select any branch, develop it further, and return to the original alternatives later.
+Instead of choosing one direction and losing the others, the
+user can select any branch, develop it further, and return to
+the original alternatives later.
 
 ## Technology Stack
 
-| Technology | Purpose |
-|---|---|
-| [Next.js](https://nextjs.org/) | Full-stack application framework |
-| [React](https://react.dev/) | Component-based user interface |
-| [React Flow](https://reactflow.dev/) | Interactive node and branching canvas |
-| [Supabase](https://supabase.com/) | PostgreSQL database, authentication, and row-level security |
-| [Vercel](https://vercel.com/) | Application deployment and hosting |
-| Server-side LLM API | AI-powered branch generation |
+| Technology                           | Purpose                                                     |
+| ------------------------------------ | ----------------------------------------------------------- |
+| [Next.js](https://nextjs.org/)       | Full-stack application framework                            |
+| [React](https://react.dev/)          | Component-based user interface                              |
+| [React Flow](https://reactflow.dev/) | Interactive node and branching canvas                       |
+| [Supabase](https://supabase.com/)    | PostgreSQL database, authentication, and row-level security |
+| [Vercel](https://vercel.com/)        | Application deployment and hosting                          |
+| Server-side LLM API                  | AI-powered branch generation                                |
 
 ## System Design
 
@@ -86,9 +98,12 @@ Next.js and React interface
   └── Supabase ───────────────► Authentication and PostgreSQL
 ```
 
-Model requests are sent through the server so that the LLM API key is never exposed to the browser.
+Model requests are sent through the server so that the LLM API
+key is never exposed to the browser.
 
-Context assembly is kept separate from the visual canvas. This allows the team to test and improve the information sent to the model without rewriting the user interface.
+Context assembly is kept separate from the visual canvas. This
+allows the team to test and improve the information sent to the
+model without rewriting the user interface.
 
 ## Project Structure
 
@@ -115,7 +130,8 @@ Before running Pathfinders, install:
 - [Node.js](https://nodejs.org/)
 - npm
 
-You will also need access to the team's Supabase project and LLM API provider.
+You will also need access to the team's Supabase project and LLM
+API provider.
 
 ### Installation
 
@@ -151,29 +167,34 @@ You will also need access to the team's Supabase project and LLM API provider.
    npm run dev
    ```
 
-7. Open [http://localhost:3000](http://localhost:3000) in your browser.
+7. Open [http://localhost:3000](http://localhost:3000) in your
+   browser.
 
 ## Environment Configuration
 
-The required environment variables are documented in `.env.example`.
+The required environment variables are documented in
+`.env.example`.
 
 ```env
 # Copy the variable names from .env.example and provide your local values.
 ```
 
-Do not commit `.env.local` or any real API keys to the repository.
+Do not commit `.env.local` or any real API keys to the
+repository.
 
-The LLM API key must only be accessed through server-side code. It should never be included in a client component or sent to the browser.
+The LLM API key must only be accessed through server-side code.
+It should never be included in a client component or sent to the
+browser.
 
 ## Development Commands
 
-| Command | Description |
-|---|---|
-| `npm run dev` | Starts the local development server |
-| `npm run build` | Creates a production build |
-| `npm run lint` | Checks the project with ESLint |
-| `npx prettier . --check` | Checks code formatting |
-| `npx prettier . --write` | Fixes code formatting |
+| Command                  | Description                         |
+| ------------------------ | ----------------------------------- |
+| `npm run dev`            | Starts the local development server |
+| `npm run build`          | Creates a production build          |
+| `npm run lint`           | Checks the project with ESLint      |
+| `npx prettier . --check` | Checks code formatting              |
+| `npx prettier . --write` | Fixes code formatting               |
 
 ## Continuous Integration
 
@@ -185,7 +206,8 @@ The initial CI workflow will verify:
 - Prettier formatting is correct
 - The application builds successfully
 
-Once the workflow is added, its status badge can be placed at the top of this README.
+Once the workflow is added, its status badge can be placed at
+the top of this README.
 
 ## Project Status
 
@@ -210,21 +232,21 @@ Update these checkboxes as tasks are completed:
 
 ## Risks and Mitigations
 
-| Risk | Mitigation |
-|---|---|
-| Model usage could become expensive or be abused on a public deployment | Set an account spending limit and rate-limit each session |
-| Branch quality depends on the context sent to the model | Implement context assembly as an independently testable pure function |
-| The visual canvas may be difficult to implement | Use React Flow and postpone branch merging if necessary |
-| Other branching chat applications already exist | Focus on the graph, branch history, and revisiting decisions rather than recreating a normal chat interface |
+| Risk                                                                   | Mitigation                                                                                                  |
+| ---------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| Model usage could become expensive or be abused on a public deployment | Set an account spending limit and rate-limit each session                                                   |
+| Branch quality depends on the context sent to the model                | Implement context assembly as an independently testable pure function                                       |
+| The visual canvas may be difficult to implement                        | Use React Flow and postpone branch merging if necessary                                                     |
+| Other branching chat applications already exist                        | Focus on the graph, branch history, and revisiting decisions rather than recreating a normal chat interface |
 
 ## Team
 
-| Team Member | Role |
-|---|---|
+| Team Member    | Role          |
+| -------------- | ------------- |
 | Cole Edmonston | Lead Engineer |
-| Ethan Ikenaga | Product Owner |
-| Jonah Depaz | Scrum Master |
-| Tyler Kim | Tester |
+| Ethan Ikenaga  | Product Owner |
+| Jonah Depaz    | Scrum Master  |
+| Tyler Kim      | Tester        |
 
 ## Contributing
 
@@ -244,7 +266,9 @@ Before opening a pull request, make sure:
 
 ## Academic Context
 
-Pathfinders is being developed for **CSC 3100: Software Engineering** at California Polytechnic State University, San Luis Obispo.
+Pathfinders is being developed for **CSC 3100: Software
+Engineering** at California Polytechnic State University, San
+Luis Obispo.
 
 ---
 
