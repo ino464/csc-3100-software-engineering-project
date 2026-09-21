@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <div align="center">
 
 # Pathfinders
@@ -252,3 +253,6 @@ Pathfinders is being developed for **CSC 3100: Software Engineering** at Califor
 Developed by the Pathfinders team.
 
 </div>
+=======
+# csc-3100-software-engineering-project
+>>>>>>> 9b36384135411e02a855ceb057b7c42bc8230aa2
