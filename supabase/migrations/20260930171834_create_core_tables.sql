@@ -5,8 +5,7 @@ create table public.sessions (
   root_node_id  uuid,
   created_at    timestamptz not null default now(),
   updated_at    timestamptz not null default now(),
-  deleted_at    timestamptz,
-  root_node_id  uuid references public.node(id) on delete cascade
+  deleted_at    timestamptz
 );
 
 create table public.nodes(
@@ -43,3 +42,7 @@ create table public.preferences(
     content     text not null,
     created_at timestamptz not null default now()
 );
+
+alter table public.sessions
+  add constraint sessions_root_node_id_fkey
+  foreign key (root_node_id) references public.nodes (id) on delete set null;
