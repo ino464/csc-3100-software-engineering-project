@@ -221,3 +221,65 @@ create policy "Users can delete edges in their own sessions"
         and s.user_id = (select auth.uid())
     )
   );
+
+alter table public.preferences enable row level security;
+
+create policy "Users can read preferences in their own sessions"
+  on public.preferences
+  for select
+  to authenticated
+  using (
+    exists (
+      select 1
+      from public.sessions s
+      where s.id = preferences.session_id
+        and s.user_id = (select auth.uid())
+    )
+  );
+
+create policy "Users can create preferences in their own sessions"
+  on public.preferences
+  for insert
+  to authenticated
+  with check (
+    exists (
+      select 1
+      from public.sessions s
+      where s.id = preferences.session_id
+        and s.user_id = (select auth.uid())
+    )
+  );
+
+create policy "Users can update preferences in their own sessions"
+  on public.preferences
+  for update
+  to authenticated
+  using (
+    exists (
+      select 1
+      from public.sessions s
+      where s.id = preferences.session_id
+        and s.user_id = (select auth.uid())
+    )
+  )
+  with check (
+    exists (
+      select 1
+      from public.sessions s
+      where s.id = preferences.session_id
+        and s.user_id = (select auth.uid())
+    )
+  );
+
+create policy "Users can delete preferences in their own sessions"
+  on public.preferences
+  for delete
+  to authenticated
+  using (
+    exists (
+      select 1
+      from public.sessions s
+      where s.id = preferences.session_id
+        and s.user_id = (select auth.uid())
+    )
+  );
