@@ -46,3 +46,30 @@ create table public.preferences(
 alter table public.sessions
   add constraint sessions_root_node_id_fkey
   foreign key (root_node_id) references public.nodes (id) on delete set null;
+
+alter table public.sessions enable row level security;
+
+create policy "Users can read their own sessions"
+  on public.sessions
+  for select
+  to authenticated
+  using (user_id = (select auth.uid()));
+
+create policy "Users can create their own sessions"
+  on public.sessions
+  for insert
+  to authenticated
+  with check (user_id = (select auth.uid()));
+
+create policy "Users can update their own sessions"
+  on public.sessions
+  for update
+  to authenticated
+  using (user_id = (select auth.uid()))
+  with check (user_id = (select auth.uid()));
+
+create policy "Users can delete their own sessions"
+  on public.sessions
+  for delete
+  to authenticated
+  using (user_id = (select auth.uid()));
