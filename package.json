@@ -10,6 +10,7 @@
     "lint": "npm run lint --workspaces --if-present"
   },
   "devDependencies": {
-    "prettier": "^3.9.7"
+    "prettier": "^3.9.7",
+    "supabase": "^2.118.0"
   }
 }
