@@ -135,3 +135,89 @@ create policy "Users can delete nodes in their own sessions"
         and s.user_id = (select auth.uid())
     )
   );
+
+alter table public.edges enable row level security;
+
+create policy "Users can read edges in their own sessions"
+  on public.edges
+  for select
+  to authenticated
+  using (
+    exists (
+      select 1
+      from public.sessions s
+      where s.id = edges.session_id
+        and s.user_id = (select auth.uid())
+    )
+  );
+
+create policy "Users can create edges in their own sessions"
+  on public.edges
+  for insert
+  to authenticated
+  with check (
+    exists (
+      select 1
+      from public.sessions s
+      where s.id = edges.session_id
+        and s.user_id = (select auth.uid())
+    )
+    and exists (
+      select 1
+      from public.nodes n
+      where n.id = edges.parent_node_id
+        and n.session_id = edges.session_id
+    )
+    and exists (
+      select 1
+      from public.nodes n
+      where n.id = edges.child_node_id
+        and n.session_id = edges.session_id
+    )
+  );
+
+create policy "Users can update edges in their own sessions"
+  on public.edges
+  for update
+  to authenticated
+  using (
+    exists (
+      select 1
+      from public.sessions s
+      where s.id = edges.session_id
+        and s.user_id = (select auth.uid())
+    )
+  )
+  with check (
+    exists (
+      select 1
+      from public.sessions s
+      where s.id = edges.session_id
+        and s.user_id = (select auth.uid())
+    )
+    and exists (
+      select 1
+      from public.nodes n
+      where n.id = edges.parent_node_id
+        and n.session_id = edges.session_id
+    )
+    and exists (
+      select 1
+      from public.nodes n
+      where n.id = edges.child_node_id
+        and n.session_id = edges.session_id
+    )
+  );
+
+create policy "Users can delete edges in their own sessions"
+  on public.edges
+  for delete
+  to authenticated
+  using (
+    exists (
+      select 1
+      from public.sessions s
+      where s.id = edges.session_id
+        and s.user_id = (select auth.uid())
+    )
+  );
