@@ -18,7 +18,7 @@ create table public.nodes(
     created_at  timestamptz not null default now(),
     deleted_at  timestamptz,
 
-    -- lets sessions.root_node_id require the root to be in the same session
+    
     unique(id, session_id)
 
     /*
@@ -50,6 +50,57 @@ alter table public.sessions
   add constraint sessions_root_node_id_fkey
   foreign key (root_node_id, id) references public.nodes (id, session_id)
   on delete set null (root_node_id);
+
+
+create function public.set_updated_at()
+returns trigger
+language plpgsql
+set search_path = ''
+as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$;
+
+create trigger sessions_set_updated_at
+  before update on public.sessions
+  for each row execute function public.set_updated_at();
+
+create function public.touch_session_updated_at()
+returns trigger
+language plpgsql
+set search_path = ''
+as $$
+begin
+  if tg_op <> 'INSERT' then
+    update public.sessions
+      set updated_at = now()
+      where id = old.session_id;
+  end if;
+
+  if tg_op = 'INSERT'
+     or (tg_op = 'UPDATE' and new.session_id <> old.session_id) then
+    update public.sessions
+      set updated_at = now()
+      where id = new.session_id;
+  end if;
+
+  return null;
+end;
+$$;
+
+create trigger nodes_touch_session
+  after insert or update or delete on public.nodes
+  for each row execute function public.touch_session_updated_at();
+
+create trigger edges_touch_session
+  after insert or update or delete on public.edges
+  for each row execute function public.touch_session_updated_at();
+
+create trigger preferences_touch_session
+  after insert or update or delete on public.preferences
+  for each row execute function public.touch_session_updated_at();
 
 alter table public.sessions enable row level security;
 
