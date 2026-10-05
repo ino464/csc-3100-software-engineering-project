@@ -16,7 +16,10 @@ create table public.nodes(
     position_x  numeric,
     position_y  numeric,
     created_at  timestamptz not null default now(),
-    deleted_at  timestamptz
+    deleted_at  timestamptz,
+
+    -- lets sessions.root_node_id require the root to be in the same session
+    unique(id, session_id)
 
     /*
     Once we decide status names update this
@@ -45,7 +48,8 @@ create table public.preferences(
 
 alter table public.sessions
   add constraint sessions_root_node_id_fkey
-  foreign key (root_node_id) references public.nodes (id) on delete set null;
+  foreign key (root_node_id, id) references public.nodes (id, session_id)
+  on delete set null (root_node_id);
 
 alter table public.sessions enable row level security;
 
