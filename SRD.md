@@ -188,8 +188,9 @@ Add your MySQL database schema and UML diagram here.
 ## 6. User Interface (UI)
 
 ### 6.1 Wireframes / Mockups
-See UI Storyboard here: 
-https://www.figma.com/design/zgO8ysGMhs7Lumws6jWTlF/Pathfinders-UI-Storyboard?node-id=0-1&t=EF9jjRfFyvBGnYQE-1 
+
+See UI Storyboard here:
+https://www.figma.com/design/zgO8ysGMhs7Lumws6jWTlF/Pathfinders-UI-Storyboard?node-id=0-1&t=EF9jjRfFyvBGnYQE-1
 
 ---
 
