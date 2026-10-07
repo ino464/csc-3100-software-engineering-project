@@ -129,6 +129,8 @@ Before running Pathfinders, install:
 - [Git](https://git-scm.com/)
 - [Node.js](https://nodejs.org/)
 - npm
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/),
+  which runs a local copy of Supabase
 
 You will also need access to the team's Supabase project and LLM
 API provider.
@@ -153,34 +155,70 @@ API provider.
    npm install
    ```
 
-4. Create a local environment file:
+4. Start Docker Desktop, then start the local Supabase stack.
+   The first run downloads the images and applies every
+   migration in `supabase/migrations`:
 
    ```bash
-   cp .env.example .env.local
+   npx supabase start
    ```
 
-5. Add the required credentials to `.env.local`.
-
-6. Start the development server:
+5. Create the frontend environment file:
 
    ```bash
-   npm run dev
+   cp packages/frontend/.env.example packages/frontend/.env.local
    ```
 
-7. Open [http://localhost:3000](http://localhost:3000) in your
-   browser.
+6. Run `npx supabase status` and copy two values into
+   `packages/frontend/.env.local`: the API URL as
+   `NEXT_PUBLIC_SUPABASE_URL` and the publishable key as
+   `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`. Use the base API URL,
+   such as `http://127.0.0.1:54321`, not the storage or S3 URL.
+
+7. Start the development server:
+
+   ```bash
+   npm run dev -w frontend
+   ```
+
+8. Open [http://localhost:3000](http://localhost:3000) in your
+   browser. The app signs you in anonymously on first load, and
+   the page shows your user id.
+
+Local Supabase Studio, where you can browse the tables, runs at
+[http://127.0.0.1:54323](http://127.0.0.1:54323).
+
+### Working with the database
+
+The schema lives in `supabase/migrations` and is never edited
+through the dashboard. After pulling changes:
+
+- If `supabase/migrations` changed, run `npx supabase db reset`
+  to rebuild the local database. This deletes local data.
+- If `supabase/config.toml` changed, run `npx supabase stop` and
+  then `npx supabase start`.
+
+To apply migrations to the hosted project:
+
+```bash
+npx supabase login
+npx supabase link --project-ref <project-ref>
+npx supabase db push
+```
+
+The project ref is the id in the hosted project's dashboard URL.
 
 ## Environment Configuration
 
 The required environment variables are documented in
-`.env.example`.
+`packages/frontend/.env.example`.
 
 ```env
 # Copy the variable names from .env.example and provide your local values.
 ```
 
-Do not commit `.env.local` or any real API keys to the
-repository.
+Do not commit `packages/frontend/.env.local` or any real API
+keys to the repository.
 
 The LLM API key must only be accessed through server-side code.
 It should never be included in a client component or sent to the
@@ -188,13 +226,16 @@ browser.
 
 ## Development Commands
 
-| Command                  | Description                         |
-| ------------------------ | ----------------------------------- |
-| `npm run dev`            | Starts the local development server |
-| `npm run build`          | Creates a production build          |
-| `npm run lint`           | Checks the project with ESLint      |
-| `npx prettier . --check` | Checks code formatting              |
-| `npx prettier . --write` | Fixes code formatting               |
+| Command                     | Description                         |
+| --------------------------- | ----------------------------------- |
+| `npm run dev -w frontend`   | Starts the local development server |
+| `npm run build -w frontend` | Creates a production build          |
+| `npm run lint`              | Checks the project with ESLint      |
+| `npm run format:check`      | Checks code formatting              |
+| `npm run format`            | Fixes code formatting               |
+| `npx supabase start`        | Starts the local Supabase stack     |
+| `npx supabase stop`         | Stops the local Supabase stack      |
+| `npx supabase db reset`     | Rebuilds the local database         |
 
 ## Continuous Integration
 
